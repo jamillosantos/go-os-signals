@@ -26,9 +26,17 @@ func NewMockListener(signals ...os.Signal) MockListener {
 	}
 }
 
-// Send channels the signal to the listener.
+// Send channels the signal to the listener. If `s` is not included at the `signals`
+// passed when the instance was created (`NewMockListener`), the signal will not
+// be passed to the `Receive` method.
+//
+// Note that no actual signal is sent.
 func (l *mockListener) Send(s os.Signal) {
-	l.sigCh <- s
+	for _, ss := range l.signals {
+		if ss == s {
+			l.sigCh <- s
+		}
+	}
 }
 
 // Receive returns the receive only channel from where the signals will be written
