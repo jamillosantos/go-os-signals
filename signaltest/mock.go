@@ -1,13 +1,15 @@
-package signals
+package signaltest
 
 import (
 	"os"
+
+	"github.com/jamillosantos/go-os-signals"
 )
 
 // MockListener is a `Listener` that allows the developer to fake signals for
 // testing purposes.
 type MockListener interface {
-	Listener
+	signals.Listener
 	Send(os.Signal)
 }
 

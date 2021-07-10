@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"syscall"
 
-	signals "github.com/setare/go-os-signals"
+	signals "github.com/jamillosantos/go-os-signals"
 )
 
 func main() {

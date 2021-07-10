@@ -20,8 +20,7 @@ func NewListener(signals ...os.Signal) Listener {
 	}
 }
 
-// Receive returns the receive only channel from where the signals will be written
-// to.
+// Receive returns the receive only channel from where the signals will be written to.
 func (l *listener) Receive() <-chan os.Signal {
 	return l.sigCh
 }

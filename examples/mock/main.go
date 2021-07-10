@@ -5,11 +5,11 @@ import (
 	"syscall"
 	"time"
 
-	signals "github.com/setare/go-os-signals"
+	"github.com/jamillosantos/go-os-signals/signaltest"
 )
 
 func main() {
-	l := signals.NewMockListener(syscall.SIGINT, syscall.SIGTERM)
+	l := signaltest.NewMockListener(syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
 		time.Sleep(time.Second * 1)

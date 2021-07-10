@@ -1,4 +1,4 @@
-# go-os-signals [![Go Report Card](https://goreportcard.com/badge/github.com/setare/go-os-signals)](https://goreportcard.com/report/github.com/setare/go-os-signals)
+# go-os-signals [![Go Report Card](https://goreportcard.com/badge/github.com/jamillosantos/go-os-signals)](https://goreportcard.com/report/github.com/jamillosantos/go-os-signals)
 
 ## Motivation
 
@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"syscall"
 
-	signals "github.com/setare/go-os-signals"
+	signals "github.com/jamillosantos/go-os-signals"
 )
 
 func main() {
@@ -30,6 +30,44 @@ func main() {
 	sig := <-l.Receive()
 	fmt.Println("Signal:", sig)
 }
+```
+
+If you need multiple goroutines to listen to the same signal you can either use multiple `Listener`s or a `Waiter`:
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"syscall"
+
+	signals "github.com/jamillosantos/go-os-signals"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	l := signals.NewWaiter(syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		defer wg.Done()
+		l.Wait()
+		fmt.Println("From GOROUTINE 1")
+
+	}()
+	go func() {
+		defer wg.Done()
+		l.Wait()
+		fmt.Println("From GOROUTINE 2")
+	}()
+
+	fmt.Println("Running ... [hit ctrl+c to finish]")
+	l.Wait()
+	fmt.Println("Signal received")
+	wg.Wait() // Wait goroutines to finish
+}
+
 ```
 
 You can find more examples at the `examples` folder.
@@ -47,11 +85,11 @@ import (
 	"syscall"
 	"time"
 
-	signals "github.com/setare/go-os-signals"
+	"github.com/jamillosantos/go-os-signals/signaltest"
 )
 
 func main() {
-	l := signals.NewMockListener(syscall.SIGINT, syscall.SIGTERM)
+	l := signaltest.NewMockListener(syscall.SIGINT, syscall.SIGTERM)
 
 	go func() {
 		time.Sleep(time.Second * 1)
